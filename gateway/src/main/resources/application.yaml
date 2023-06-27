@@ -1,0 +1,25 @@
+server:
+  port: 8090
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+      - id: teams
+        uri: lb://teams
+        predicates:
+        - Path=/teams/**
+      - id: players
+        uri: lb://players
+        predicates:
+        - Path=/players/**
+        
+
+
+
+
