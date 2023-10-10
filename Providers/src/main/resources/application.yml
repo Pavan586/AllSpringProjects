@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-alias: Providers
+    key-store: classpath:security.jks
+    key-store-type: Jks
+    key-password: password
+  port: 7777
+    

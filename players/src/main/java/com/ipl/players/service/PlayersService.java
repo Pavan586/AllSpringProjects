@@ -2,6 +2,7 @@ package com.ipl.players.service;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 
@@ -9,18 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.ipl.players.EmailSenderService;
 import com.ipl.players.dto.Teams;
 import com.ipl.players.entity.Players;
 import com.ipl.players.exception.PlayerAlreadyExistsException;
 import com.ipl.players.repository.PlayersRepository;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class PlayersService {
+	@Autowired
+	private EmailSenderService senderService;
 	@Autowired
 	private PlayersRepository pr;
 	@Autowired
 	private RestTemplate restTemplate;
-
+	
 	public void savePlayersData(Players players,List<Players> playersinfo) {
 		// TODO Auto-generated method stub
 		int status=0;
@@ -78,7 +84,7 @@ public class PlayersService {
 		
 	}
 
-	public void assign(String tname, String pname, List<Players> playersdata) {
+	public void assign(String tname, String pname, List<Players> playersdata) throws MessagingException {
 		// TODO Auto-generated method stub
 		int i,teamId;
 		teamId=restTemplate.getForObject("http://localhost:8081/teams/getteamidbyteamname/"+tname,Integer.class);
@@ -89,6 +95,10 @@ public class PlayersService {
 				Players p=pr.getById(playersdata.get(i).getPid());
 				p.setTid(teamId);
 				pr.save(p);
+				senderService.sendSimpleEmail(playersdata.get(i).getPemail(),
+						"Assigned confirmation",
+						"Congratulations "+pname+",Your have been assigned to "+tname+ " team successfully");
+
 				break;
 	}
 		}

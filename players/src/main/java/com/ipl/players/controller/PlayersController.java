@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ipl.players.entity.Players;
 import com.ipl.players.service.PlayersService;
 
+import jakarta.mail.MessagingException;
+
 
 @RestController
 @CrossOrigin(origins="http://localhost:4200")
@@ -52,7 +54,7 @@ public class PlayersController {
 		return ps.getPlayersByTeamName(teamName);
 	}
 	@PutMapping("/assign/{tname}/{pname}")
-	public void assign(@PathVariable String tname,@PathVariable String pname)  {
+	public void assign(@PathVariable String tname,@PathVariable String pname) throws MessagingException  {
 		//Players players=new Players();
 		List<Players> playersdata=getPlayers();
 		ps.assign(tname,pname,playersdata);
